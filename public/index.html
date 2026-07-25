@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>1% — Identity Rebuild</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="icon" href="/icons/favicon.ico" />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="32x32"
+      href="/icons/favicon-32x32.png"
+    />
+    <link
+      rel="icon"
+      type="image/png"
+      sizes="16x16"
+      href="/icons/favicon-16x16.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      sizes="180x180"
+      href="/icons/apple-touch-icon.png"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta
+      name="apple-mobile-web-app-status-bar-style"
+      content="black-translucent"
+    />
+    <meta name="apple-mobile-web-app-title" content="1%" />
+    <meta name="theme-color" content="#0d0c0b" />
+  </head>
+  <body>
+    <div id="app">
+      <!-- ===== HEADER ===== -->
+      <header class="header">
+        <div class="wordmark">1<span class="pct">%</span></div>
+        <div class="header-meta"><span id="todayDate"></span></div>
+      </header>
+
+      <div class="stats-strip">
+        <div class="stat">
+          <span class="stat-num" id="statMorningStreak">0</span
+          ><span class="stat-label">ritual streak</span
+          ><span class="stat-total" id="statMorningTotal"></span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="statDayStreak">0</span
+          ><span class="stat-label">day streak</span
+          ><span class="stat-total" id="statDayTotal"></span>
+        </div>
+        <div class="stat">
+          <span class="stat-num" id="statNightStreak">0</span
+          ><span class="stat-label">night streak</span
+          ><span class="stat-total" id="statNightTotal"></span>
+        </div>
+      </div>
+
+      <div class="quick-check-strip" id="quickCheckStrip">
+        <div class="quick-check-form" id="quickCheckForm">
+          <div class="quick-check-field">
+            <label class="field-label" for="qcSleep">Sleep (hrs)</label>
+            <input
+              type="number"
+              id="qcSleep"
+              min="0"
+              max="14"
+              step="0.5"
+              placeholder="7.5"
+            />
+          </div>
+          <button class="quick-check-toggle" id="qcExercise" type="button">
+            🏃 Exercised
+          </button>
+          <button class="quick-check-toggle" id="qcHydrated" type="button">
+            💧 Hydrated
+          </button>
+          <button class="btn-secondary-solid" id="qcSave" type="button">
+            Save
+          </button>
+        </div>
+        <div class="quick-check-summary" id="quickCheckSummary" hidden>
+          <span id="quickCheckSummaryText"></span>
+          <button class="quick-check-edit" id="qcEditBtn" type="button">
+            Edit
+          </button>
+        </div>
+      </div>
+
+      <main class="main">
+        <!-- ===== HERO: BEGIN RITUAL ===== -->
+        <section class="hero-card" id="ritualHeroCard">
+          <div class="hero-eyebrow">03:00 · three minutes, once a day</div>
+          <h1 class="hero-title">Begin the Morning Ritual</h1>
+          <p class="hero-sub">
+            Bury who you were. State who you are. See who you're becoming.
+          </p>
+          <button class="btn-ritual" id="startRitualBtn">Enter Ritual</button>
+          <div class="hero-status" id="ritualDoneStatus" hidden>
+            Completed today. Come back tomorrow.
+          </div>
+
+          <div class="voice-settings">
+            <button class="voice-toggle" id="voiceSettingsToggle">
+              Voice settings
+            </button>
+            <div class="voice-panel" id="voicePanel" hidden>
+              <label class="field-label" for="voiceSelect"
+                >Narrator voice</label
+              >
+              <select id="voiceSelect"></select>
+              <label class="field-label" for="voiceRate"
+                >Speaking pace — slower is calmer</label
+              >
+              <input
+                type="range"
+                id="voiceRate"
+                min="0.7"
+                max="1.1"
+                step="0.02"
+                value="0.85"
+              />
+              <button class="btn-secondary" id="previewVoiceBtn" type="button">
+                Preview voice
+              </button>
+              <p class="voice-hint">
+                Robotic voice? Your OS likely has a better one installed but not
+                selected — on Windows, add a "Natural" voice under Settings →
+                Time &amp; Language → Speech; on Mac, System Settings →
+                Accessibility → Spoken Content → System Voice → download an
+                "Enhanced/Premium" voice. It'll show up in the dropdown above.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ===== DAILY ROUTINE ===== -->
+        <section class="routine-card">
+          <div class="section-head">
+            <h2>Daily Routine</h2>
+            <span class="routine-count" id="dayProgressLabel">0 / 0</span>
+          </div>
+          <div class="routine-list" id="dayChecklist"></div>
+          <form class="routine-add-form" id="dayItemForm">
+            <input
+              type="text"
+              id="dayItemInput"
+              placeholder="Add a daily task, e.g. Workout, Read 10 pages…"
+            />
+            <button type="submit" class="btn-secondary-solid">Add</button>
+          </form>
+          <button class="btn-complete-day" id="completeDayBtn">
+            Mark Day Complete
+          </button>
+          <div class="night-status" id="dayCompleteStatus" hidden>
+            Day logged. Good work.
+          </div>
+        </section>
+
+        <!-- ===== HABITS ===== -->
+        <section class="habits-section">
+          <div class="section-head">
+            <h2>Habits</h2>
+            <button class="btn-add" id="addHabitBtn">+ New Habit</button>
+          </div>
+          <div class="masonry" id="habitsGrid"></div>
+          <div class="empty-state" id="habitsEmpty" hidden>
+            No habits yet. Add the first one — good or bad, name it and start
+            counting.
+          </div>
+        </section>
+
+        <!-- ===== CBT REFRAME ===== -->
+        <section class="reframe-card">
+          <div class="section-head">
+            <h2>Reframe</h2>
+            <span class="routine-count" id="reframeCountLabel">0 logged</span>
+          </div>
+          <p class="night-sub">
+            Trigger → automatic thought → reframe. Keep it under 30 seconds.
+          </p>
+          <form id="reframeForm">
+            <label class="field-label" for="rfTrigger">Trigger</label>
+            <input
+              type="text"
+              id="rfTrigger"
+              placeholder="e.g. Saw my phone light up"
+            />
+
+            <label class="field-label" for="rfThought">Automatic thought</label>
+            <input
+              type="text"
+              id="rfThought"
+              placeholder="e.g. I'll just check for one second"
+            />
+
+            <label class="field-label" for="rfDistortion"
+              >Distortion (optional)</label
+            >
+            <select id="rfDistortion">
+              <option value="">— pick one, or skip —</option>
+              <option value="all-or-nothing">
+                All-or-nothing — "I already slipped, day's ruined"
+              </option>
+              <option value="catastrophizing">
+                Catastrophizing — "If I don't do this I can't cope"
+              </option>
+              <option value="mind-reading">
+                Mind-reading — "They'll think I'm weird if I refuse"
+              </option>
+              <option value="fortune-telling">
+                Fortune-telling — "I won't sleep without it"
+              </option>
+              <option value="discounting-positive">
+                Discounting the positive — "3 days clean doesn't count, I'll
+                fail anyway"
+              </option>
+              <option value="emotional-reasoning">
+                Emotional reasoning — "I feel like I need it, so I must"
+              </option>
+              <option value="should-statements">
+                "Should" statements — "I shouldn't feel this way by now"
+              </option>
+              <option value="labeling">
+                Labeling — "I'm just an addict, this is who I am"
+              </option>
+            </select>
+
+            <label class="field-label" for="rfReframe">Reframe</label>
+            <input
+              type="text"
+              id="rfReframe"
+              placeholder="e.g. One second turns into 40 minutes, every time"
+            />
+
+            <button type="submit" class="btn-night">Log Reframe</button>
+          </form>
+          <div class="reframe-list" id="reframeList"></div>
+        </section>
+
+        <!-- ===== STILLNESS ===== -->
+        <section class="stillness-card">
+          <div class="section-head">
+            <h2>Stillness</h2>
+            <span class="routine-count" id="silenceCompletedLabel"
+              >0 completed</span
+            >
+          </div>
+          <p class="night-sub">
+            No content, no dopamine hit — just sit with it. The target grows
+            automatically as you complete sessions.
+          </p>
+          <div class="silence-target" id="silenceTargetLabel">Target: 2:00</div>
+          <button class="btn-ritual btn-ritual-night" id="startSilenceBtn">
+            Start Silence Session
+          </button>
+        </section>
+
+        <!-- ===== WEEKLY INSIGHTS ===== -->
+        <section class="insights-card">
+          <div class="section-head"><h2>Weekly Insights</h2></div>
+          <div class="insight-grid">
+            <div class="insight-stat">
+              <span class="stat-num" id="insUrgeTotal">0</span
+              ><span class="stat-label">urges logged (30d)</span>
+            </div>
+            <div class="insight-stat">
+              <span class="stat-num" id="insSurfRate">—</span
+              ><span class="stat-label">urge-surf rate</span>
+            </div>
+            <div class="insight-stat">
+              <span class="stat-num" id="insReframeCount">0</span
+              ><span class="stat-label">reframes logged</span>
+            </div>
+            <div class="insight-stat">
+              <span class="stat-num" id="insSilenceMinutes">0</span
+              ><span class="stat-label">stillness minutes</span>
+            </div>
+          </div>
+          <div class="insight-correlations" id="insightCorrelations"></div>
+          <div class="insight-triggers" id="insightTriggers"></div>
+        </section>
+
+        <!-- ===== NIGHT ROUTINE ===== -->
+        <section class="hero-card night-hero-card" id="nightHeroCard">
+          <div class="hero-eyebrow">manifest · reflect · close the day</div>
+          <h1 class="hero-title">Enter Night Routine</h1>
+          <p class="hero-sub">
+            Hear your manifestations, see today's numbers, close the day on
+            purpose.
+          </p>
+          <button class="btn-ritual btn-ritual-night" id="startNightBtn">
+            Enter Night Routine
+          </button>
+          <div class="hero-status" id="nightDoneStatus" hidden>
+            Completed today. Come back tomorrow night.
+          </div>
+
+          <div class="manifest-manage">
+            <div class="section-head"><h3>Manifestations</h3></div>
+            <div class="routine-list" id="nightChecklist"></div>
+            <form class="routine-add-form" id="nightItemForm">
+              <input
+                type="text"
+                id="nightItemInput"
+                placeholder="Add a manifestation, e.g. I am becoming the person I described…"
+              />
+              <button type="submit" class="btn-secondary-solid">Add</button>
+            </form>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <div class="ritual-overlay" id="nightOverlay" hidden>
+      <button
+        class="ritual-exit"
+        id="nightExit"
+        aria-label="Exit night routine"
+      >
+        &times;
+      </button>
+      <div class="ritual-progress">
+        <div class="ritual-progress-fill" id="nightProgressFill"></div>
+      </div>
+      <div class="ritual-act-label" id="nightActLabel">MANIFESTATIONS</div>
+      <div class="ritual-stage" id="nightStage"></div>
+      <button class="ritual-next" id="nightNextBtn">Continue</button>
+    </div>
+
+    <!-- ===== ADD HABIT MODAL ===== -->
+    <div class="modal-overlay" id="addHabitModal" hidden>
+      <div class="modal">
+        <h3>New Habit</h3>
+        <label class="field-label" for="habitName">Name</label>
+        <input
+          type="text"
+          id="habitName"
+          placeholder="e.g. Cold shower / Nicotine / Reels"
+        />
+        <label class="field-label">Type</label>
+        <div class="type-choice">
+          <button type="button" class="type-btn type-good" data-type="good">
+            Good — I want to build this
+          </button>
+          <button type="button" class="type-btn type-bad" data-type="bad">
+            Bad — I'm quitting this
+          </button>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelAddHabit">Cancel</button>
+          <button class="btn-primary" id="saveHabit" disabled>Add Habit</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== MILESTONE TOAST ===== -->
+    <div class="milestone-toast" id="milestoneToast" hidden>
+      <div class="milestone-num" id="milestoneNum"></div>
+      <div class="milestone-text">days. Keep going.</div>
+    </div>
+
+    <!-- ===== MORNING RITUAL OVERLAY ===== -->
+    <div class="ritual-overlay" id="ritualOverlay" hidden>
+      <button class="ritual-exit" id="ritualExit" aria-label="Exit ritual">
+        &times;
+      </button>
+      <div class="ritual-progress">
+        <div class="ritual-progress-fill" id="ritualProgressFill"></div>
+      </div>
+      <div class="ritual-act-label" id="ritualActLabel">
+        MINUTE 1 — THE PAST
+      </div>
+      <div class="ritual-stage" id="ritualStage"></div>
+      <button class="ritual-next" id="ritualNextBtn">Continue</button>
+    </div>
+
+    <!-- ===== URGE FAB ===== -->
+    <button class="urge-fab" id="urgeFabBtn">Urge</button>
+
+    <!-- ===== URGE LOG MODAL ===== -->
+    <div class="modal-overlay" id="urgeModal" hidden>
+      <div class="modal">
+        <h3>Log the Urge</h3>
+        <label class="field-label" for="urgeIntensity"
+          >Intensity: <span id="urgeIntensityVal">5</span>/10</label
+        >
+        <input type="range" id="urgeIntensity" min="1" max="10" value="5" />
+
+        <label class="field-label" for="urgeTrigger">Trigger</label>
+        <input
+          type="text"
+          id="urgeTrigger"
+          placeholder="e.g. Bored, saw phone, stressed…"
+        />
+
+        <label class="field-label">Context</label>
+        <div class="context-chips" id="contextChips">
+          <button type="button" class="context-chip" data-ctx="alone">
+            Alone
+          </button>
+          <button type="button" class="context-chip" data-ctx="bored">
+            Bored
+          </button>
+          <button type="button" class="context-chip" data-ctx="stressed">
+            Stressed
+          </button>
+          <button type="button" class="context-chip" data-ctx="phone-in-hand">
+            Phone in hand
+          </button>
+          <button type="button" class="context-chip" data-ctx="in-bed">
+            In bed
+          </button>
+          <button type="button" class="context-chip" data-ctx="social">
+            Around people
+          </button>
+        </div>
+
+        <div class="modal-actions">
+          <button class="btn-secondary" id="cancelUrge">Cancel</button>
+          <button class="btn-primary" id="startUrgeTimer">
+            Start 10-min Timer
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== URGE SURF TIMER OVERLAY ===== -->
+    <div class="ritual-overlay" id="urgeTimerOverlay" hidden>
+      <button
+        class="ritual-exit"
+        id="urgeTimerExit"
+        aria-label="Exit urge timer"
+      >
+        &times;
+      </button>
+      <div class="ritual-act-label">THIS PEAKS AND PASSES</div>
+      <div class="ritual-stage">
+        <div>
+          <div class="breathing-circle"></div>
+          <div class="urge-timer-display" id="urgeTimerDisplay">10:00</div>
+          <div class="urge-coping-prompt" id="urgeCopingPrompt">
+            Notice the urge. You don't have to act on it or fight it — just
+            watch it.
+          </div>
+        </div>
+      </div>
+      <div class="urge-timer-actions">
+        <button class="btn-secondary-solid" id="urgeActedBtn">
+          I acted on it
+        </button>
+        <button class="btn-ritual" id="urgeSurfedBtn">
+          I surfed it — I'm good
+        </button>
+      </div>
+    </div>
+
+    <!-- ===== SILENCE TIMER OVERLAY ===== -->
+    <div class="ritual-overlay" id="silenceOverlay" hidden>
+      <button
+        class="ritual-exit"
+        id="silenceExit"
+        aria-label="Exit silence session"
+      >
+        &times;
+      </button>
+      <div class="ritual-act-label">STILLNESS</div>
+      <div class="ritual-stage">
+        <div>
+          <div class="breathing-circle"></div>
+          <div class="urge-timer-display" id="silenceTimerDisplay">2:00</div>
+        </div>
+      </div>
+      <button class="ritual-next" id="silenceDoneBtn">I'm Done</button>
+    </div>
+    <script src="ritual-content.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
